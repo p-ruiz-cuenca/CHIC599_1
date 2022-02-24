@@ -1,0 +1,1 @@
+Format=Year, Month, 1-31 daily precipitation values.
