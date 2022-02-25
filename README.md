@@ -1,4 +1,4 @@
-# _Research Project 1 (aka mini-project)_
+# **Research Project 1 (aka mini-project)**
 
 ## Data sources 
 
