@@ -1,5 +1,6 @@
 # 1.Load data ====
 library(reshape2)
+library(stringr)
 
 ## Temperature data ------
 
@@ -8,6 +9,7 @@ library(reshape2)
 clean.temp.data <- function(data, temp.name){
   
   require(reshape2)
+  require(stringr)
   
   temp <- read.fwf(data,
                    widths = rep(5, 14),
@@ -33,6 +35,26 @@ clean.temp.data <- function(data, temp.name){
                                   "Sep", "Oct", "Nov", "Dec"),
                        ordered = TRUE)
   
+  # introduce decimal points 
+  
+  for (i in 1:length(temp[[temp.name]])) {
+    
+    if (nchar(abs(temp[[temp.name]][i]))==1 | is.na(temp[[temp.name]][i])==TRUE) {
+      
+      temp[[temp.name]][i] <- temp[[temp.name]][i]
+      
+    } else { 
+      
+      temp[[temp.name]][i] <- as.numeric(paste0(str_sub(temp[[temp.name]][i],
+                                                          1, (nchar(temp[[temp.name]][i])-1)),
+                                                  ".",
+                                                  str_sub(temp[[temp.name]][i], nchar(temp[[temp.name]][i]),
+                                                          nchar(temp[[temp.name]][i]))))
+      
+    }
+    
+  }
+  
   # order data frame by Yeah, Month and then Day 
   
   temp <- temp[order(temp$Year,
@@ -52,6 +74,22 @@ min.temp <- clean.temp.data(data = "raw_data/daily_min_HadCET_1878_2022.txt",
 
 max.temp <- clean.temp.data(data = "raw_data/daily_max_HadCET_1878_2022.txt",
                             temp.name = "max.temp")
+
+# plot data
+
+plot(1:length(mean.temp$mean.temp[mean.temp$Year > 2019]),
+     mean.temp$mean.temp[mean.temp$Year > 2019],
+     type = "l")
+
+matplot(1:length(mean.temp$mean.temp[mean.temp$Year > 2020]),
+        cbind(min.temp$min.temp[min.temp$Year>2020],
+              mean.temp$mean.temp[mean.temp$Year>2020],
+              max.temp$max.temp[max.temp$Year>2020]),
+        type = "l",
+        lty = c("dashed", "solid", "dashed"),
+        col = 1,
+        xlab = "Day",
+        ylab = "Temp")
 
 ## Rainfall data -----
 
