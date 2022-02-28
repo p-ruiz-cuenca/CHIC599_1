@@ -5,7 +5,8 @@ library(lubridate)
 
 covid <- read.csv("data/covid_data.csv")
 
-covid$date <- ymd(covid$date)
+covid$date <- as.numeric(ymd(covid$date))
+covid$date <- covid$date-min(covid$date)+1
 
 ((day(covid$date)-27)+(ifelse(month(covid$date)==2, 28,
                              ifelse(month(covid$date)%in%c(1,3,5,7,8,10,12),
@@ -30,6 +31,10 @@ ifelse(month(covid$date)%in%c(1,3,5,7,8,10,12),
 
 ifelse(month(covid$date)==1 | month(covid$date)==3,
        31, 30)
+
+# create splines with bs() base spline from package "spline"
+bs()
+# knots -> give as a vector all the point you want the slope to change 
 
   
 # Create lagged variables ====
