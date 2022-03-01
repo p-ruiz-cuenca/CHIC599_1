@@ -5,38 +5,47 @@ library(lubridate)
 
 covid <- read.csv("data/covid_data.csv")
 
-covid$date <- as.numeric(ymd(covid$date))
-covid$date <- covid$date-min(covid$date)+1
+covid$date <- ymd(covid$date)
+covid$newPeopleVaccinatedSecondDoseByVaccinationDate[is.na(covid$newPeopleVaccinatedSecondDoseByVaccinationDate)] <- 0
+covid$newPeopleVaccinatedThirdInjectionByVaccinationDate[is.na(covid$newPeopleVaccinatedThirdInjectionByVaccinationDate)] <- 0
 
-((day(covid$date)-27)+(ifelse(month(covid$date)==2, 28,
-                             ifelse(month(covid$date)%in%c(1,3,5,7,8,10,12),
-                                    31, 30)))*(month(covid$date)-6)+
-    ifelse(leap_year(year(covid$date)),
-           366, 365)*(year(covid$date)-2020))
+# Create "t" variable 
+covid$t <- as.numeric(covid$date)-(min(as.numeric(covid$date)))+1
 
-[188]
+## Create binary lockdown variable ----
+covid$lockdown <- rep(0, length(covid$date))
 
-ifelse(leap_year(year(covid$date)),
-       366, 365)
+# second lockdown
+covid$lockdown[covid$date > ymd("2020-11-04") & 
+                 covid$date < ymd("2020-12-02")] <- 1
 
-leap_year(year(covid$date))[189]
+# third lockdown 
+covid$lockdown[covid$date > ymd("2020-12-25") & 
+                 covid$date < ymd("2021-03-30")] <- 1
 
+# Plot cases and lockdown 
 
-ifelse(month(covid$date)==2, 28,
-       ifelse(month(covid$date)%in%c(1,3,5,7,8,10,12),
-              31, 30))
+ggplot(covid, aes(x = t))+
+  geom_line(aes(y = newCasesBySpecimenDate))+
+  annotate("rect", xmin = 132, xmax = 158,
+           ymin = 0, ymax = max(covid$newCasesBySpecimenDate),
+           fill = "red", alpha = 0.1)+
+  annotate("rect", xmin = 183, xmax = 276,
+           ymin = 0, ymax = max(covid$newCasesBySpecimenDate),
+           fill = "red", alpha = 0.1)+
+  scale_y_continuous("log New Cases", expand = c(0,0))
 
-ifelse(month(covid$date)%in%c(1,3,5,7,8,10,12),
-       31, 30)
-
-ifelse(month(covid$date)==1 | month(covid$date)==3,
-       31, 30)
-
-# create splines with bs() base spline from package "spline"
-bs()
-# knots -> give as a vector all the point you want the slope to change 
-
+ggplot(covid, aes(x = t))+
+  geom_line(aes(y = log(newCasesBySpecimenDate)))+
+  annotate("rect", xmin = 132, xmax = 158,
+           ymin = 0, ymax = max(log(covid$newCasesBySpecimenDate)),
+           fill = "red", alpha = 0.1)+
+  annotate("rect", xmin = 183, xmax = 276,
+           ymin = 0, ymax = max(log(covid$newCasesBySpecimenDate)),
+           fill = "red", alpha = 0.1)+
+  scale_y_continuous("log New Cases", expand = c(0,0))
   
+
 # Create lagged variables ====
 
 create.lag.var <- function(x,lag,data) {
@@ -48,3 +57,7 @@ create.lag.var <- function(x,lag,data) {
   })
   x[ind.lag]
 }
+
+# create splines with bs() base spline from package "spline"
+bs()
+# knots -> give as a vector all the point you want the slope to change 

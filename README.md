@@ -14,3 +14,9 @@ COVID: gov.uk - UK Coronavirus Dashboard (https://coronavirus.data.gov.uk/)
 
 Population: ONS Population estimates (https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/populationestimatesforukenglandandwalesscotlandandnorthernireland)
   - Population estimate for North West England mid-2020: 7367456
+  
+Lockdown timeline:
+  - Institue for Government (https://www.instituteforgovernment.org.uk/sites/default/files/timeline-coronavirus-lockdown-december-2021.pdf)
+  - House of Commons library (https://researchbriefings.files.parliament.uk/documents/CBP-9068/CBP-9068.pdf)
+  
+
