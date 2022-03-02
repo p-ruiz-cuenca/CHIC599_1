@@ -10,37 +10,37 @@ library(lubridate)
 
 # use the second function, the first is more tedious to introduce decimal points
 #clean.temp.data <- function(data, temp.name){
-  
-  require(reshape2)
-  require(stringr)
-  
-  temp <- read.fwf(data,
-                   widths = rep(5, 14),
-                   header = FALSE,
-                   col.names = c("Year", "Day",
-                                 "Jan", "Feb", "Mar", "Apr",
-                                 "May", "Jun", "Jul", "Aug",
-                                 "Sep", "Oct", "Nov", "Dec"))
-  
-  
-  # change -999 to NA
-  temp[temp == -999] <- NA
-  
-  # wide to long
-  temp <- melt(temp, id = c("Year", "Day"))
-  names(temp)[c(3,4)] <- c("Month", temp.name)
-  
-  # change month to factor
-  
-  temp$Month <- factor(temp$Month,
-                       levels = c("Jan", "Feb", "Mar", "Apr",
-                                  "May", "Jun", "Jul", "Aug",
-                                  "Sep", "Oct", "Nov", "Dec"),
-                       ordered = TRUE)
-  
-  # introduce decimal points 
-  
-  for (i in 1:length(temp[[temp.name]])) {
+# 
+# require(reshape2)
+# require(stringr)
+# 
+# temp <- read.fwf(data,
+#                  widths = rep(5, 14),
+#                  header = FALSE,
+#                  col.names = c("Year", "Day",
+#                                "Jan", "Feb", "Mar", "Apr",
+#                                "May", "Jun", "Jul", "Aug",
+#                                "Sep", "Oct", "Nov", "Dec"))
+# 
+# 
+# # change -999 to NA
+# temp[temp == -999] <- NA
+# 
+# # wide to long
+# temp <- melt(temp, id = c("Year", "Day"))
+# names(temp)[c(3,4)] <- c("Month", temp.name)
+# 
+# # change month to factor
+# 
+# temp$Month <- factor(temp$Month,
+#                      levels = c("Jan", "Feb", "Mar", "Apr",
+#                                 "May", "Jun", "Jul", "Aug",
+#                                 "Sep", "Oct", "Nov", "Dec"),
+#                      ordered = TRUE)
+# 
+# # introduce decimal points 
+# 
+# for (i in 1:length(temp[[temp.name]])) {
     
     if (nchar(abs(temp[[temp.name]][i]))==1 | is.na(temp[[temp.name]][i])==TRUE) {
       
@@ -57,17 +57,17 @@ library(lubridate)
     }
     
   }
-  
-  # order data frame by Year, Month and then Day 
-  
-  temp <- temp[order(temp$Year,
-                     temp$Month,
-                     temp$Day),]
-  
-  
-  return(temp)
-  
-}
+# 
+# # order data frame by Year, Month and then Day 
+# 
+# temp <- temp[order(temp$Year,
+#                    temp$Month,
+#                    temp$Day),]
+# 
+# 
+# return(temp)
+# 
+#}
 
 clean.temp.data <- function(data, temp.name){
   
