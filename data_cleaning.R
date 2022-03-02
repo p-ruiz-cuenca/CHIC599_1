@@ -8,7 +8,8 @@ library(lubridate)
 
 # Create function to import temperature data
 
-clean.temp.data <- function(data, temp.name){
+# use the second function, the first is more tedious to introduce decimal points
+#clean.temp.data <- function(data, temp.name){
   
   require(reshape2)
   require(stringr)
@@ -68,6 +69,57 @@ clean.temp.data <- function(data, temp.name){
   
 }
 
+clean.temp.data <- function(data, temp.name){
+  
+  require(reshape2)
+  require(lubridate)
+  
+  temp <- read.fwf(data,
+                   widths = rep(5, 14),
+                   header = FALSE,
+                   col.names = c("Year", "Day",
+                                 "Jan", "Feb", "Mar", "Apr",
+                                 "May", "Jun", "Jul", "Aug",
+                                 "Sep", "Oct", "Nov", "Dec"))
+  
+  
+  # change -999 to NA
+  temp[temp == -999] <- NA
+  
+  # wide to long
+  temp <- melt(temp, id = c("Year", "Day"))
+  names(temp)[c(3,4)] <- c("Month", temp.name)
+  
+  # change month to factor
+  
+  temp$Month <- factor(temp$Month,
+                       levels = c("Jan", "Feb", "Mar", "Apr",
+                                  "May", "Jun", "Jul", "Aug",
+                                  "Sep", "Oct", "Nov", "Dec"),
+                       ordered = TRUE)
+  
+  # introduce decimal points 
+  
+  temp[[temp.name]] <- (temp[[temp.name]])/10
+  
+  
+  # order data frame by Year, Month and then Day 
+  
+  temp <- temp[order(temp$Year,
+                     temp$Month,
+                     temp$Day),]
+  
+  # Create date variable combining Year, Month and Day 
+  
+  temp$date <- paste(temp$Year, as.numeric(temp$Month), temp$Day,
+                     sep = "-")
+  
+  temp$date <- ymd(temp$date)
+  
+  return(temp)
+  
+}
+
 mean.temp <- clean.temp.data(data = "raw_data/daily_HadCET_1772_2022.txt",
                              temp.name = "mean.temp")
 
@@ -77,20 +129,23 @@ min.temp <- clean.temp.data(data = "raw_data/daily_min_HadCET_1878_2022.txt",
 max.temp <- clean.temp.data(data = "raw_data/daily_max_HadCET_1878_2022.txt",
                             temp.name = "max.temp")
 
-mean.temp$date <- paste(mean.temp$Year, as.numeric(mean.temp$Month), mean.temp$Day,
-                        sep = "-")
 
-mean.temp$date <- ymd(mean.temp$date)
+# This is now included in the function above
 
-min.temp$date <- paste(min.temp$Year, as.numeric(min.temp$Month), min.temp$Day,
-                        sep = "-")
+#mean.temp$date <- paste(mean.temp$Year, as.numeric(mean.temp$Month), mean.temp$Day,
+#                        sep = "-")
 
-min.temp$date <- ymd(min.temp$date)
+#mean.temp$date <- ymd(mean.temp$date)
 
-max.temp$date <- paste(max.temp$Year, as.numeric(max.temp$Month), max.temp$Day,
-                        sep = "-")
+#min.temp$date <- paste(min.temp$Year, as.numeric(min.temp$Month), min.temp$Day,
+#                        sep = "-")
 
-max.temp$date <- ymd(max.temp$date)
+#min.temp$date <- ymd(min.temp$date)
+
+#max.temp$date <- paste(max.temp$Year, as.numeric(max.temp$Month), max.temp$Day,
+#                        sep = "-")
+
+#max.temp$date <- ymd(max.temp$date)
 
 
 
@@ -151,6 +206,10 @@ covid$date <- ymd(covid$date)
 reinf$date <- ymd(reinf$date)
 
 covid <- merge(covid, reinf[,c(4,5)], by = "date")
+
+covid$newPeopleVaccinatedSecondDoseByVaccinationDate[is.na(covid$newPeopleVaccinatedSecondDoseByVaccinationDate)] <- 0 
+covid$newPeopleVaccinatedThirdInjectionByVaccinationDate[is.na(covid$newPeopleVaccinatedThirdInjectionByVaccinationDate)] <- 0
+
 
 # merge covid data with environmental data 
 
