@@ -41,7 +41,8 @@ ggplot(covid, aes(x = t))+
            fill = "red", alpha = 0.1)+
   scale_y_continuous("New Cases", expand = c(0,0))+
   xlab("Time (days)")+
-  theme_light()
+  theme_light()+
+  theme(plot.background = element_rect(fill = "transparent", colour = NA))
 
 ggplot(covid, aes(x = t))+
   geom_line(aes(y = log(cases)))+
@@ -87,6 +88,32 @@ for (i in 1:length(env.vars)) {
 
 
 any(covid$newCasesBySpecimenDate==0)
+
+# compare variables against cases ====
+
+vars.plot <- c("rain", "mean.temp", "min.temp", "max.temp")
+
+plot.list <- list()
+
+for (i in 1:length(vars.plot)) {
+  
+  plot.list[[vars.plot[i]]][["no.lag"]] <- 
+    ggplot(covid, aes(y = log(cases)))+
+    geom_point(aes_string(x = vars.plot[i]))
+  
+  lags <- c(2, 7, 10, 28)
+  
+  for (j in 1:length(lags)) {
+    
+    plot.list[[vars.plot[i]]][[paste0("lag.", lags[j])]] <-
+      ggplot(covid, aes(y = log(cases)))+
+      geom_point(aes_string(x = paste0(vars.plot[i], ".lag.", lags[j])))
+    
+  }
+  
+  
+}
+
 
 # create splines with bs() base spline from package "spline"
 bs()

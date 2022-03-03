@@ -285,3 +285,34 @@ for (i in 1:length(env.vars)) {
   
 }
 ```
+
+### Compare variables against log(cases)
+
+Once I created the lagged variables, I could compare these against my
+outcome of interest. As I will be modelling `log(cases)`, I will use
+this against the different variables.
+
+**Rain**
+
+<img src="README_files/figure-gfm/rain_vs_log_cases-1.png" width="20%" /><img src="README_files/figure-gfm/rain_vs_log_cases-2.png" width="20%" /><img src="README_files/figure-gfm/rain_vs_log_cases-3.png" width="20%" /><img src="README_files/figure-gfm/rain_vs_log_cases-4.png" width="20%" /><img src="README_files/figure-gfm/rain_vs_log_cases-5.png" width="20%" />
+
+No clear correlation
+
+**Mean Temperature**
+
+<img src="README_files/figure-gfm/mean.temp_vs_log_cases-1.png" width="20%" /><img src="README_files/figure-gfm/mean.temp_vs_log_cases-2.png" width="20%" /><img src="README_files/figure-gfm/mean.temp_vs_log_cases-3.png" width="20%" /><img src="README_files/figure-gfm/mean.temp_vs_log_cases-4.png" width="20%" /><img src="README_files/figure-gfm/mean.temp_vs_log_cases-5.png" width="20%" />
+
+Some possible correlation, maybe stronger at lag 7 and lag 10.
+
+**Minimum temperature**
+
+<img src="README_files/figure-gfm/min.temp_vs_log_cases-1.png" width="20%" /><img src="README_files/figure-gfm/min.temp_vs_log_cases-2.png" width="20%" /><img src="README_files/figure-gfm/min.temp_vs_log_cases-3.png" width="20%" /><img src="README_files/figure-gfm/min.temp_vs_log_cases-4.png" width="20%" /><img src="README_files/figure-gfm/min.temp_vs_log_cases-5.png" width="20%" />
+
+Very weak correlation, if any at all.
+
+**Maximum temperature**
+
+<img src="README_files/figure-gfm/max.temp_vs_log_cases-1.png" width="20%" /><img src="README_files/figure-gfm/max.temp_vs_log_cases-2.png" width="20%" /><img src="README_files/figure-gfm/max.temp_vs_log_cases-3.png" width="20%" /><img src="README_files/figure-gfm/max.temp_vs_log_cases-4.png" width="20%" /><img src="README_files/figure-gfm/max.temp_vs_log_cases-5.png" width="20%" />
+
+Some correlation, particularly at lag 7 and lag 10. Plot for lag 2 shows
+an interesting pocket where no data is found.
