@@ -230,14 +230,14 @@ Once these variables were created, I was able to plot the cases of COVID
 against time.
 
 ![Fig 1 - COVID cases in North West England. Red shading corresponds to
-lockdown periods.](research_log_files/figure-gfm/COVID_cases_plot-1.png)
+lockdown periods.](README_files/figure-gfm/COVID_cases_plot-1.png)
 
 It is easier to see trends on the log scale, so I also created a plot
 using this scale:
 
 ![Fig 2 - COVID Cases for the North West of England, using the log
 scale. Red shading corresponds to lockdown
-periods.](research_log_files/figure-gfm/log_covid_cases_plot-1.png)
+periods.](README_files/figure-gfm/log_covid_cases_plot-1.png)
 
 ### Create lagged variables
 

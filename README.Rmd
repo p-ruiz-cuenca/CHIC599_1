@@ -253,7 +253,8 @@ ggplot(covid, aes(x = t))+
            fill = "red", alpha = 0.1)+
   scale_y_continuous("New Cases", expand = c(0,0))+
   xlab("Time (days)")+
-  theme_light()
+  theme_light()+
+  theme(plot.background = element_rect(fill = "transparent", colour = NA))
 
 ```
 
@@ -271,7 +272,8 @@ ggplot(covid, aes(x = t))+
            fill = "red", alpha = 0.1)+
   scale_y_continuous("log(New Cases)", expand = c(0,0))+
   xlab("Time (days)")+
-  theme_light()
+  theme_light()+
+  theme(plot.background = element_rect(fill = "transparent", colour = NA))
 
 ```
 
