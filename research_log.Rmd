@@ -203,6 +203,14 @@ The population for mid-2020 was 7 367 456.
 
 ### COVID data frame
 
+```{r read_covid_data, echo=FALSE}
+
+covid <- read.csv("data/covid_data.csv")
+
+covid$date <- ymd(covid$date)
+
+```
+
 Before beginning any exploratory data analysis, I had to create a `t` variable. This corresponds to the increase in time. In this case, `t` is day. 
 
 ```{r create_t_var, echo=TRUE}
@@ -236,12 +244,12 @@ Once these variables were created, I was able to plot the cases of COVID against
 ```{r COVID_cases_plot, fig.cap="Fig 1 - COVID cases in North West England. Red shading corresponds to lockdown periods.", echo=FALSE}
 
 ggplot(covid, aes(x = t))+
-  geom_line(aes(y = newCasesBySpecimenDate))+
+  geom_line(aes(y = cases))+
   annotate("rect", xmin = 132, xmax = 158,
-           ymin = -500, ymax = max(covid$newCasesBySpecimenDate)+500,
+           ymin = -500, ymax = max(covid$cases)+500,
            fill = "red", alpha = 0.1)+
   annotate("rect", xmin = 183, xmax = 276,
-           ymin = -500, ymax = max(covid$newCasesBySpecimenDate)+500,
+           ymin = -500, ymax = max(covid$cases)+500,
            fill = "red", alpha = 0.1)+
   scale_y_continuous("New Cases", expand = c(0,0))+
   xlab("Time (days)")+
@@ -254,12 +262,12 @@ It is easier to see trends on the log scale, so I also created a plot using this
 ```{r log_covid_cases_plot, fig.cap="Fig 2 - COVID Cases for the North West of England, using the log scale. Red shading corresponds to lockdown periods.", echo=FALSE}
 
 ggplot(covid, aes(x = t))+
-  geom_line(aes(y = log(newCasesBySpecimenDate)))+
+  geom_line(aes(y = log(cases)))+
   annotate("rect", xmin = 132, xmax = 158,
-           ymin = -0.2, ymax = max(log(covid$newCasesBySpecimenDate))+0.2,
+           ymin = -0.2, ymax = max(log(covid$cases))+0.2,
            fill = "red", alpha = 0.1)+
   annotate("rect", xmin = 183, xmax = 276,
-           ymin = -0.2, ymax = max(log(covid$newCasesBySpecimenDate))+0.2,
+           ymin = -0.2, ymax = max(log(covid$cases))+0.2,
            fill = "red", alpha = 0.1)+
   scale_y_continuous("log(New Cases)", expand = c(0,0))+
   xlab("Time (days)")+

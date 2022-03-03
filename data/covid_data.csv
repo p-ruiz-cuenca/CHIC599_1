@@ -1,4 +1,4 @@
-"date","areaCode","areaName","areaType","newCasesBySpecimenDate","newDeaths28DaysByDeathDate","newDeaths60DaysByDeathDate","newPeopleVaccinatedSecondDoseByVaccinationDate","newPeopleVaccinatedThirdInjectionByVaccinationDate","newReinfectionsBySpecimenDate","rain","mean.temp","min.temp","max.temp","pop"
+"date","areaCode","areaName","areaType","cases","deaths.28","deaths.60","vacc.2nd","vacc.3rd","reinf","rain","mean.temp","min.temp","max.temp","pop"
 2020-06-27,"E12000002","North West","region",94,8,13,0,0,1,12.68,16.3,13.5,19,7367456
 2020-06-28,"E12000002","North West","region",95,11,22,0,0,0,13.35,13.7,10.4,16.9,7367456
 2020-06-29,"E12000002","North West","region",124,10,14,0,0,1,2.75,13.5,10.7,16.2,7367456

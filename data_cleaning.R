@@ -41,22 +41,22 @@ library(lubridate)
 # # introduce decimal points 
 # 
 # for (i in 1:length(temp[[temp.name]])) {
-    
-    if (nchar(abs(temp[[temp.name]][i]))==1 | is.na(temp[[temp.name]][i])==TRUE) {
-      
-      temp[[temp.name]][i] <- temp[[temp.name]][i]
-      
-    } else { 
-      
-      temp[[temp.name]][i] <- as.numeric(paste0(str_sub(temp[[temp.name]][i],
-                                                          1, (nchar(temp[[temp.name]][i])-1)),
-                                                  ".",
-                                                  str_sub(temp[[temp.name]][i], nchar(temp[[temp.name]][i]),
-                                                          nchar(temp[[temp.name]][i]))))
-      
-    }
-    
-  }
+#    
+#    if (nchar(abs(temp[[temp.name]][i]))==1 | is.na(temp[[temp.name]][i])==TRUE) {
+#      
+#      temp[[temp.name]][i] <- temp[[temp.name]][i]
+#      
+#    } else { 
+#      
+#      temp[[temp.name]][i] <- as.numeric(paste0(str_sub(temp[[temp.name]][i],
+#                                                          1, (nchar(temp[[temp.name]][i])-1)),
+#                                                  ".",
+#                                                  str_sub(temp[[temp.name]][i], nchar(temp[[temp.name]][i]),
+#                                                          nchar(temp[[temp.name]][i]))))
+#      
+#    }
+#    
+#  }
 # 
 # # order data frame by Year, Month and then Day 
 # 
@@ -227,6 +227,24 @@ covid$pop <- rep(7367456, length(covid$date))
 
 # 2.Save data as csv file ----
 
+# change variable names for ease of use 
+
+names(covid)[5:10] <- c("cases", "deaths.28", "deaths.60", "vacc.2nd", "vacc.3rd",
+                        "reinf")
+
+# Include verbose labels 
+library(expss)
+
+covid <- apply_labels(covid,
+             cases = "New cases by specimen date",
+             deaths.28 = "New deaths 28 days after diagnosis, by death date",
+             deaths.60 = "New deaths 60 days after diagnosis, by death date",
+             reinf = "New reinfections by specimen date")
+
+names(covid)
+var_lab(covid$deaths.28)
+
+# save as csv 
 write.csv(covid, file = "data/covid_data.csv", na = "NA",
           row.names = FALSE)
 # test plots 
