@@ -326,11 +326,16 @@ for (i in 1:length(env.vars)) {
 
 ```
 
-### Compare variables against log(cases)
+### Compare variables against log(incidence)
 
-Once I created the lagged variables, I could compare these against my outcome of interest. As I will be modelling `log(cases)`, I will use this against the different variables. 
+Once I created the lagged variables, I could compare these against my outcome of interest. As I will be modelling `log(incidence)`, I will use this against the different variables. 
 
-```{r set_up_plots, echo=FALSE}
+```{r set_up_plots, echo=FALSE, message=FALSE}
+
+covid <- read.csv("data/covid_data.csv")
+
+covid$incidence <- covid$cases/covid$pop
+
 vars.plot <- c("rain", "mean.temp", "min.temp", "max.temp")
 
 plot.list <- list()
@@ -338,16 +343,25 @@ plot.list <- list()
 for (i in 1:length(vars.plot)) {
   
   plot.list[[vars.plot[i]]][["no.lag"]] <- 
-    ggplot(covid, aes(y = log(cases)))+
-    geom_point(aes_string(x = vars.plot[i]))
+    ggplot(covid, aes(y = log(incidence)))+
+    geom_point(aes_string(x = vars.plot[i]))+
+    geom_smooth(method = lm, aes_string(x = vars.plot[i]))+
+    geom_smooth(col = "red",se = FALSE,
+                linetype = "dashed", size = 0.5,
+                aes_string(x = vars.plot[i]))
   
   lags <- c(2, 7, 10, 28)
   
   for (j in 1:length(lags)) {
     
     plot.list[[vars.plot[i]]][[paste0("lag.", lags[j])]] <-
-      ggplot(covid, aes(y = log(cases)))+
-      geom_point(aes_string(x = paste0(vars.plot[i], ".lag.", lags[j])))
+      ggplot(covid, aes(y = log(incidence)))+
+      geom_point(aes_string(x = paste0(vars.plot[i], ".lag.", lags[j])))+
+      geom_smooth(method = lm,
+                  aes_string(x = paste0(vars.plot[i], ".lag.", lags[j])))+
+      geom_smooth(col = "red",se = FALSE,
+                  linetype = "dashed", size = 0.5,
+                  aes_string(x = paste0(vars.plot[i], ".lag.", lags[j])))
     
   }
   
@@ -359,7 +373,7 @@ for (i in 1:length(vars.plot)) {
 
 **Rain**
 
-```{r rain_vs_log_cases, fig.show='hold', out.width='20%', warning=FALSE, echo=FALSE, results='hide'}
+```{r rain_vs_log_cases, fig.show='hold', out.width='40%', warning=FALSE, echo=FALSE, results='hide', message=FALSE}
 
 plot.list$rain
 
@@ -369,31 +383,31 @@ No clear correlation
 
 **Mean Temperature**
 
-```{r mean.temp_vs_log_cases, fig.show='hold', out.width='20%', warning=FALSE, echo=FALSE, results='hide'}
+```{r mean.temp_vs_log_cases, fig.show='hold', out.width='40%', warning=FALSE, echo=FALSE, results='hide', message=FALSE}
 
 plot.list$mean.temp
 
 ```
 
-Some possible correlation, maybe stronger at lag 7 and lag 10.
+Some possible correlation, maybe stronger at lag 2, lag 7 and lag 10.Possible spline effect. 
 
 **Minimum temperature**
 
-```{r min.temp_vs_log_cases, fig.show='hold', out.width='20%', warning=FALSE, echo=FALSE, results='hide'}
+```{r min.temp_vs_log_cases, fig.show='hold', out.width='40%', warning=FALSE, echo=FALSE, results='hide', message=FALSE}
 
 plot.list$min.temp
 
 ```
 
-Very weak correlation, if any at all. 
+Very weak correlation, if any at all, but some possible spline effect after approx min.temp = 12. This is particularly true in no lag, lag 2, lag 7 and lag 10.
 
 **Maximum temperature**
 
-```{r max.temp_vs_log_cases, fig.show='hold', out.width='20%', warning=FALSE, echo=FALSE, results='hide'}
+```{r max.temp_vs_log_cases, fig.show='hold', out.width='40%', warning=FALSE, echo=FALSE, results='hide', message=FALSE}
 
 plot.list$max.temp
 
 ```
 
-Some correlation, particularly at lag 7 and lag 10. Plot for lag 2 shows an interesting pocket where no data is found. 
+Some correlation. Plots show an interesting pocket where no data is found. 
 

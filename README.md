@@ -286,33 +286,36 @@ for (i in 1:length(env.vars)) {
 }
 ```
 
-### Compare variables against log(cases)
+### Compare variables against log(incidence)
 
 Once I created the lagged variables, I could compare these against my
-outcome of interest. As I will be modelling `log(cases)`, I will use
+outcome of interest. As I will be modelling `log(incidence)`, I will use
 this against the different variables.
 
 **Rain**
 
-<img src="README_files/figure-gfm/rain_vs_log_cases-1.png" width="20%" /><img src="README_files/figure-gfm/rain_vs_log_cases-2.png" width="20%" /><img src="README_files/figure-gfm/rain_vs_log_cases-3.png" width="20%" /><img src="README_files/figure-gfm/rain_vs_log_cases-4.png" width="20%" /><img src="README_files/figure-gfm/rain_vs_log_cases-5.png" width="20%" />
+<img src="README_files/figure-gfm/rain_vs_log_cases-1.png" width="40%" /><img src="README_files/figure-gfm/rain_vs_log_cases-2.png" width="40%" /><img src="README_files/figure-gfm/rain_vs_log_cases-3.png" width="40%" /><img src="README_files/figure-gfm/rain_vs_log_cases-4.png" width="40%" /><img src="README_files/figure-gfm/rain_vs_log_cases-5.png" width="40%" />
 
 No clear correlation
 
 **Mean Temperature**
 
-<img src="README_files/figure-gfm/mean.temp_vs_log_cases-1.png" width="20%" /><img src="README_files/figure-gfm/mean.temp_vs_log_cases-2.png" width="20%" /><img src="README_files/figure-gfm/mean.temp_vs_log_cases-3.png" width="20%" /><img src="README_files/figure-gfm/mean.temp_vs_log_cases-4.png" width="20%" /><img src="README_files/figure-gfm/mean.temp_vs_log_cases-5.png" width="20%" />
+<img src="README_files/figure-gfm/mean.temp_vs_log_cases-1.png" width="40%" /><img src="README_files/figure-gfm/mean.temp_vs_log_cases-2.png" width="40%" /><img src="README_files/figure-gfm/mean.temp_vs_log_cases-3.png" width="40%" /><img src="README_files/figure-gfm/mean.temp_vs_log_cases-4.png" width="40%" /><img src="README_files/figure-gfm/mean.temp_vs_log_cases-5.png" width="40%" />
 
-Some possible correlation, maybe stronger at lag 7 and lag 10.
+Some possible correlation, maybe stronger at lag 2, lag 7 and lag
+10.Possible spline effect.
 
 **Minimum temperature**
 
-<img src="README_files/figure-gfm/min.temp_vs_log_cases-1.png" width="20%" /><img src="README_files/figure-gfm/min.temp_vs_log_cases-2.png" width="20%" /><img src="README_files/figure-gfm/min.temp_vs_log_cases-3.png" width="20%" /><img src="README_files/figure-gfm/min.temp_vs_log_cases-4.png" width="20%" /><img src="README_files/figure-gfm/min.temp_vs_log_cases-5.png" width="20%" />
+<img src="README_files/figure-gfm/min.temp_vs_log_cases-1.png" width="40%" /><img src="README_files/figure-gfm/min.temp_vs_log_cases-2.png" width="40%" /><img src="README_files/figure-gfm/min.temp_vs_log_cases-3.png" width="40%" /><img src="README_files/figure-gfm/min.temp_vs_log_cases-4.png" width="40%" /><img src="README_files/figure-gfm/min.temp_vs_log_cases-5.png" width="40%" />
 
-Very weak correlation, if any at all.
+Very weak correlation, if any at all, but some possible spline effect
+after approx min.temp = 12. This is particularly true in no lag, lag 2,
+lag 7 and lag 10.
 
 **Maximum temperature**
 
-<img src="README_files/figure-gfm/max.temp_vs_log_cases-1.png" width="20%" /><img src="README_files/figure-gfm/max.temp_vs_log_cases-2.png" width="20%" /><img src="README_files/figure-gfm/max.temp_vs_log_cases-3.png" width="20%" /><img src="README_files/figure-gfm/max.temp_vs_log_cases-4.png" width="20%" /><img src="README_files/figure-gfm/max.temp_vs_log_cases-5.png" width="20%" />
+<img src="README_files/figure-gfm/max.temp_vs_log_cases-1.png" width="40%" /><img src="README_files/figure-gfm/max.temp_vs_log_cases-2.png" width="40%" /><img src="README_files/figure-gfm/max.temp_vs_log_cases-3.png" width="40%" /><img src="README_files/figure-gfm/max.temp_vs_log_cases-4.png" width="40%" /><img src="README_files/figure-gfm/max.temp_vs_log_cases-5.png" width="40%" />
 
-Some correlation, particularly at lag 7 and lag 10. Plot for lag 2 shows
-an interesting pocket where no data is found.
+Some correlation. Plots show an interesting pocket where no data is
+found.

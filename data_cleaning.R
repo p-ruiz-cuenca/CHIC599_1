@@ -207,6 +207,8 @@ reinf$date <- ymd(reinf$date)
 
 covid <- merge(covid, reinf[,c(4,5)], by = "date")
 
+# change NA's in vaccination variables to 0
+
 covid$newPeopleVaccinatedSecondDoseByVaccinationDate[is.na(covid$newPeopleVaccinatedSecondDoseByVaccinationDate)] <- 0 
 covid$newPeopleVaccinatedThirdInjectionByVaccinationDate[is.na(covid$newPeopleVaccinatedThirdInjectionByVaccinationDate)] <- 0
 
@@ -286,6 +288,18 @@ covid$max.temp.lag.28[is.na(covid$max.temp.lag.28)] <- max.temp$max.temp[which(m
 # population estimate for North-West England for mid-2020 = 7,367,456
 covid$pop <- rep(7367456, length(covid$date))
 
+## e. Create binary lockdown variables -----
+
+covid$lockdown <- rep(0, length(covid$date))
+
+# second lockdown
+covid$lockdown[covid$date > ymd("2020-11-04") & 
+                 covid$date < ymd("2020-12-02")] <- 1
+
+# third lockdown 
+covid$lockdown[covid$date > ymd("2020-12-25") & 
+                 covid$date < ymd("2021-03-30")] <- 1
+
 # 2.Save data as csv file ----
 
 # change variable names for ease of use 
@@ -295,9 +309,9 @@ names(covid)[5:10] <- c("cases", "deaths.28", "deaths.60", "vacc.2nd", "vacc.3rd
 
 # re-arrange columns 
 
-names(covid)[c(1,15,2:4, 32, 5:11, 16:19, 12, 20:23, 13, 24:27, 14, 28:31)]
+names(covid)[c(1,15,2:4, 32, 5:10, 33, 11, 16:19, 12, 20:23, 13, 24:27, 14, 28:31)]
 
-covid <- covid[,c(1,15,2:4, 32, 5:11, 16:19, 12, 20:23, 13, 24:27, 14, 28:31)]
+covid <- covid[,c(1,15,2:4, 32, 5:10, 33, 11, 16:19, 12, 20:23, 13, 24:27, 14, 28:31)]
 
 # Include verbose labels 
 # doesn't really work well
