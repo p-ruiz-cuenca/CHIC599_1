@@ -90,6 +90,58 @@ plot.list$min.temp
 
 plot.list$max.temp
 
+# 3. Build model ====
+
+covid.complete <- covid[complete.cases(covid),]
+
+lm.fit0 <- lm(log(incidence) ~ sin(2*pi*t/7) + cos(2*pi*t/7)+
+                lockdown + vacc.2nd + vacc.3rd, 
+              data = covid.complete)
+
+lm.fit1 <- lm(log(incidence) ~ sin(2*pi*t/7) + cos(2*pi*t/7)+
+                lockdown + vacc.2nd + vacc.3rd +
+                max.temp.lag.10, 
+              data = covid.complete)
+
+lm.fit1$coefficients[7]
+
+hist(lm.fit1$residuals)
+
+summary.1 <- summary(lm.fit1)
+
+vars.model <- c("mean.temp", "min.temp", "max.temp")
+
+model.list <- list()
+
+for (i in 1:length(vars.model)) {
+  
+  lm.fit1 <- lm(as.formula(paste0("log(incidence) ~ sin(2*pi*t/7) + cos(2*pi*t/7)+
+                lockdown + vacc.2nd + vacc.3rd +", vars.model[i])),
+                data = covid.complete)
+  
+  model.list[[vars.model[i]]][["no.lag"]][["coef"]] <- lm.fit1$coefficients[7]
+  
+  model.list[[vars.model[i]]][["no.lag"]][["hist.resid"]] <- hist(lm.fit1$residuals)
+  
+  lags <- c(2, 7, 10, 28)
+  
+  for (j in 1:length(lags)) {
+    
+    lm.fit1 <- lm(as.formula(paste0("log(incidence) ~ sin(2*pi*t/7) + cos(2*pi*t/7)+
+                lockdown + vacc.2nd + vacc.3rd +", vars.model[i], ".lag.", lags[j])),
+                  data = covid.complete)
+    model.list[[vars.model[i]]][[paste0("lag.", lags[j])]][["coef"]] <- lm.fit1$coefficients[7]
+    model.list[[vars.model[i]]][[paste0("lag.", lags[j])]][["hist.resid"]] <- hist(lm.fit1$residuals)
+    
+  }
+  
+}
+
+model.list$mean.temp$no.lag
+
+
+###############################################################################
+
 splines::bs()
 
 # create splines with bs() base spline from package "spline"
@@ -141,3 +193,24 @@ week.seasonality <- data.frame(
 
 ggplot(week.seasonality, aes(x = day, y = cases.pred))+
   geom_line()
+
+
+# 3. Is there seasonality in covid incidence?
+
+covid$week.day <- wday(covid$date, label = TRUE, 
+                       week_start = getOption("lubridate.week.start", 1))
+
+covid$week.num <- (isoweek(covid$date)-25)+(52*(year(covid$date)-2020))
+
+covid %>% 
+  group_by(week.num, week.day) %>% 
+  summarise(cases = cases) %>% 
+  ungroup() %>% 
+  group_by(week.num) %>% 
+  mutate(prop.cases = cases/max(cases)) %>% 
+  ggplot()+
+  geom_line(aes(x = week.day, y = prop.cases, group = week.num),
+            alpha = 0.2)
+
+ggplot(covid, aes(x = week.day, y = log(incidence)))+
+  geom_line(aes(group = week.num), alpha = 0.2)
