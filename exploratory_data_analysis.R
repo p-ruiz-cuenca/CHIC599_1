@@ -22,10 +22,12 @@ covid <- apply_labels(covid,
 
 ## a. COVID cases ----
 
+covid$incidence <- covid$cases/covid$pop
+
 ggplot(covid, aes(x = date, y = log(incidence)))+
   geom_line()
 
-ggplot(covid, aes(x = date, y = reinf))+
+ggplot(covid, aes(x = date, y = log(reinf+1)))+
   geom_line()
 
 # Vaccinations 
@@ -46,9 +48,7 @@ ggplot(covid, aes(x = date))+
               alpha = 0.3)+
   geom_line(aes(y = mean.temp))
 
-# Compare variables against log(incidence) ====
-
-covid$incidence <- covid$cases/covid$pop
+# 2. Compare variables against log(incidence) ====
 
 vars.plot <- c("rain", "mean.temp", "min.temp", "max.temp")
 
