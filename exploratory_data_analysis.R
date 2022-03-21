@@ -18,6 +18,33 @@ covid <- apply_labels(covid,
                       reinf = "New reinfections by specimen date")
 
 
+# 1. Exploratory analysis of variables over time ====
+
+## a. COVID cases ----
+
+ggplot(covid, aes(x = date, y = log(incidence)))+
+  geom_line()
+
+ggplot(covid, aes(x = date, y = reinf))+
+  geom_line()
+
+# Vaccinations 
+
+ggplot(covid, aes(x = date))+
+  geom_line(aes(y = vacc.2nd), col = "red")+
+  geom_line(aes(y = vacc.3rd), col = "blue")
+
+## b. Rain -----
+
+ggplot(covid, aes(x = date, y = rain))+
+  geom_line()
+
+## c. Temperature ----
+
+ggplot(covid, aes(x = date))+
+  geom_ribbon(aes(ymax = max.temp, ymin = min.temp), fill = "red",
+              alpha = 0.3)+
+  geom_line(aes(y = mean.temp))
 
 # Compare variables against log(incidence) ====
 
