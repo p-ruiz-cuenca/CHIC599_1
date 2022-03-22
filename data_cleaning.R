@@ -243,7 +243,7 @@ env.vars <- c("rain", "mean.temp", "min.temp", "max.temp")
 
 for (i in 1:length(env.vars)) {
   
-  lags <- c(2, 7, 10, 28)
+  lags <- c(2, 6, 14)
   
   for (j in 1:length(lags)) {
     
@@ -261,24 +261,20 @@ for (i in 1:length(env.vars)) {
   # and finding the corresponding environmental data for those dates
 
 covid$rain.lag.2[is.na(covid$rain.lag.2)] <- rain$rain[which(rain$date%in%(covid$date[is.na(covid$rain.lag.2)]-2))]
-covid$rain.lag.7[is.na(covid$rain.lag.7)] <- rain$rain[which(rain$date%in%(covid$date[is.na(covid$rain.lag.7)]-7))]
-covid$rain.lag.10[is.na(covid$rain.lag.10)] <- rain$rain[which(rain$date%in%(covid$date[is.na(covid$rain.lag.10)]-10))]
-covid$rain.lag.28[is.na(covid$rain.lag.28)] <- rain$rain[which(rain$date%in%(covid$date[is.na(covid$rain.lag.28)]-28))]
+covid$rain.lag.6[is.na(covid$rain.lag.6)] <- rain$rain[which(rain$date%in%(covid$date[is.na(covid$rain.lag.6)]-6))]
+covid$rain.lag.14[is.na(covid$rain.lag.14)] <- rain$rain[which(rain$date%in%(covid$date[is.na(covid$rain.lag.14)]-14))]
 
 covid$mean.temp.lag.2[is.na(covid$mean.temp.lag.2)] <- mean.temp$mean.temp[which(mean.temp$date%in%(covid$date[is.na(covid$mean.temp.lag.2)]-2))]
-covid$mean.temp.lag.7[is.na(covid$mean.temp.lag.7)] <- mean.temp$mean.temp[which(mean.temp$date%in%(covid$date[is.na(covid$mean.temp.lag.7)]-7))]
-covid$mean.temp.lag.10[is.na(covid$mean.temp.lag.10)] <- mean.temp$mean.temp[which(mean.temp$date%in%(covid$date[is.na(covid$mean.temp.lag.10)]-10))]
-covid$mean.temp.lag.28[is.na(covid$mean.temp.lag.28)] <- mean.temp$mean.temp[which(mean.temp$date%in%(covid$date[is.na(covid$mean.temp.lag.28)]-28))]
+covid$mean.temp.lag.6[is.na(covid$mean.temp.lag.6)] <- mean.temp$mean.temp[which(mean.temp$date%in%(covid$date[is.na(covid$mean.temp.lag.6)]-6))]
+covid$mean.temp.lag.14[is.na(covid$mean.temp.lag.14)] <- mean.temp$mean.temp[which(mean.temp$date%in%(covid$date[is.na(covid$mean.temp.lag.14)]-14))]
 
 covid$min.temp.lag.2[is.na(covid$min.temp.lag.2)] <- min.temp$min.temp[which(min.temp$date%in%(covid$date[is.na(covid$min.temp.lag.2)]-2))]
-covid$min.temp.lag.7[is.na(covid$min.temp.lag.7)] <- min.temp$min.temp[which(min.temp$date%in%(covid$date[is.na(covid$min.temp.lag.7)]-7))]
-covid$min.temp.lag.10[is.na(covid$min.temp.lag.10)] <- min.temp$min.temp[which(min.temp$date%in%(covid$date[is.na(covid$min.temp.lag.10)]-10))]
-covid$min.temp.lag.28[is.na(covid$min.temp.lag.28)] <- min.temp$min.temp[which(min.temp$date%in%(covid$date[is.na(covid$min.temp.lag.28)]-28))]
+covid$min.temp.lag.6[is.na(covid$min.temp.lag.6)] <- min.temp$min.temp[which(min.temp$date%in%(covid$date[is.na(covid$min.temp.lag.6)]-6))]
+covid$min.temp.lag.14[is.na(covid$min.temp.lag.14)] <- min.temp$min.temp[which(min.temp$date%in%(covid$date[is.na(covid$min.temp.lag.14)]-14))]
 
 covid$max.temp.lag.2[is.na(covid$max.temp.lag.2)] <- max.temp$max.temp[which(max.temp$date%in%(covid$date[is.na(covid$max.temp.lag.2)]-2))]
-covid$max.temp.lag.7[is.na(covid$max.temp.lag.7)] <- max.temp$max.temp[which(max.temp$date%in%(covid$date[is.na(covid$max.temp.lag.7)]-7))]
-covid$max.temp.lag.10[is.na(covid$max.temp.lag.10)] <- max.temp$max.temp[which(max.temp$date%in%(covid$date[is.na(covid$max.temp.lag.10)]-10))]
-covid$max.temp.lag.28[is.na(covid$max.temp.lag.28)] <- max.temp$max.temp[which(max.temp$date%in%(covid$date[is.na(covid$max.temp.lag.28)]-28))]
+covid$max.temp.lag.6[is.na(covid$max.temp.lag.6)] <- max.temp$max.temp[which(max.temp$date%in%(covid$date[is.na(covid$max.temp.lag.6)]-6))]
+covid$max.temp.lag.14[is.na(covid$max.temp.lag.14)] <- max.temp$max.temp[which(max.temp$date%in%(covid$date[is.na(covid$max.temp.lag.14)]-14))]
 
 
 ## d. Population data ----
@@ -309,9 +305,11 @@ names(covid)[5:10] <- c("cases", "deaths.28", "deaths.60", "vacc.2nd", "vacc.3rd
 
 # re-arrange columns 
 
-names(covid)[c(1,15,2:4, 32, 5:10, 33, 11, 16:19, 12, 20:23, 13, 24:27, 14, 28:31)]
+names(covid)[c(1,15,2:4, 28, 5:10, 29, 11, 16:18,
+               12, 19:21, 13, 22:24, 14, 25:27)]
 
-covid <- covid[,c(1,15,2:4, 32, 5:10, 33, 11, 16:19, 12, 20:23, 13, 24:27, 14, 28:31)]
+covid <- covid[,c(1,15,2:4, 28, 5:10, 29, 11, 16:18,
+                  12, 19:21, 13, 22:24, 14, 25:27)]
 
 # Include verbose labels 
 # doesn't really work well
