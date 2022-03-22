@@ -64,7 +64,7 @@ for (i in 1:length(vars.plot)) {
                 linetype = "dashed", size = 0.5,
                 aes_string(x = vars.plot[i]))
   
-  lags <- c(2, 7, 10, 28)
+  lags <- c(2, 6, 14)
   
   for (j in 1:length(lags)) {
     
@@ -94,50 +94,50 @@ plot.list$max.temp
 
 covid.complete <- covid[complete.cases(covid),]
 
-lm.fit0 <- lm(log(incidence) ~ sin(2*pi*t/7) + cos(2*pi*t/7)+
-                lockdown + vacc.2nd + vacc.3rd, 
-              data = covid.complete)
+env.vars <- c("rain", "rain.lag.2", "rain.lag.6", "rain.lag.14",
+              "mean.temp", "mean.temp.lag.2", "mean.temp.lag.6", "mean.temp.lag.14",
+              "min.temp", "min.temp.lag.2", "min.temp.lag.6", "min.temp.lag.14",
+              "max.temp", "max.temp.lag.2", "max.temp.lag.6", "max.temp.lag.14")
 
-lm.fit1 <- lm(log(incidence) ~ sin(2*pi*t/7) + cos(2*pi*t/7)+
-                lockdown + vacc.2nd + vacc.3rd +
-                max.temp.lag.10, 
-              data = covid.complete)
+compare.models <- data.frame(
+  env.var = env.vars,
+  p.value = rep(NA, length(env.vars)),
+  signif = rep(NA, length(env.vars)),
+  aic = rep(NA, length(env.vars)))
 
-lm.fit1$coefficients[7]
 
-hist(lm.fit1$residuals)
-
-summary.1 <- summary(lm.fit1)
-
-vars.model <- c("mean.temp", "min.temp", "max.temp")
-
-model.list <- list()
-
-for (i in 1:length(vars.model)) {
+for (i in 1:length(env.vars)) {
   
   lm.fit1 <- lm(as.formula(paste0("log(incidence) ~ sin(2*pi*t/7) + cos(2*pi*t/7)+
-                lockdown + vacc.2nd + vacc.3rd +", vars.model[i])),
+                lockdown + vacc.2nd + vacc.3rd +", env.vars[i])),
                 data = covid.complete)
   
-  model.list[[vars.model[i]]][["no.lag"]][["coef"]] <- lm.fit1$coefficients[7]
+  compare.models$p.value[i] <- summary(lm.fit1)$coefficients[7,4]
   
-  model.list[[vars.model[i]]][["no.lag"]][["hist.resid"]] <- hist(lm.fit1$residuals)
+  compare.models$aic[i] <- AIC(lm.fit1)
   
-  lags <- c(2, 7, 10, 28)
-  
-  for (j in 1:length(lags)) {
-    
-    lm.fit1 <- lm(as.formula(paste0("log(incidence) ~ sin(2*pi*t/7) + cos(2*pi*t/7)+
-                lockdown + vacc.2nd + vacc.3rd +", vars.model[i], ".lag.", lags[j])),
-                  data = covid.complete)
-    model.list[[vars.model[i]]][[paste0("lag.", lags[j])]][["coef"]] <- lm.fit1$coefficients[7]
-    model.list[[vars.model[i]]][[paste0("lag.", lags[j])]][["hist.resid"]] <- hist(lm.fit1$residuals)
-    
+  if (compare.models$p.value[i] > 0.1){
+    compare.models$signif[i] <- c("-")
+  } else if(compare.models$p.value[i] < 0.1 &
+            compare.models$p.value[i] > 0.05){
+    compare.models$signif[i] <- c(".")
+  } else if(compare.models$p.value[i] < 0.05 &
+            compare.models$p.value[i] > 0.01){
+    compare.models$signif[i] <- c("*")
+  } else if(compare.models$p.value[i] < 0.01 & 
+            compare.models$p.value[i] > 0.001){
+    compare.models$signif[i] <- c("**")
+  } else if(compare.models$p.value[i] < 0.001){
+    compare.models$signif[i] <- c("***")
   }
+  
+  compare.models$p.value[i] <- round(compare.models$p.value[i], digits = 3)  
   
 }
 
-model.list$mean.temp$no.lag
+knitr::kable(compare.models, format = 'html')
+
+compare.models
 
 
 ###############################################################################

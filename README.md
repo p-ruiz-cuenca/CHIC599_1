@@ -273,7 +273,7 @@ env.vars <- c("rain", "mean.temp", "min.temp", "max.temp")
 
 for (i in 1:length(env.vars)) {
   
-  lags <- c(2, 7, 10, 28)
+  lags <- c(2, 6, 14)
   
   for (j in 1:length(lags)) {
     
@@ -294,28 +294,60 @@ this against the different variables.
 
 **Rain**
 
-<img src="README_files/figure-gfm/rain_vs_log_cases-1.png" width="40%" /><img src="README_files/figure-gfm/rain_vs_log_cases-2.png" width="40%" /><img src="README_files/figure-gfm/rain_vs_log_cases-3.png" width="40%" /><img src="README_files/figure-gfm/rain_vs_log_cases-4.png" width="40%" /><img src="README_files/figure-gfm/rain_vs_log_cases-5.png" width="40%" />
+<img src="README_files/figure-gfm/rain_vs_log_cases-1.png" width="40%" /><img src="README_files/figure-gfm/rain_vs_log_cases-2.png" width="40%" /><img src="README_files/figure-gfm/rain_vs_log_cases-3.png" width="40%" /><img src="README_files/figure-gfm/rain_vs_log_cases-4.png" width="40%" />
 
 No clear correlation
 
 **Mean Temperature**
 
-<img src="README_files/figure-gfm/mean.temp_vs_log_cases-1.png" width="40%" /><img src="README_files/figure-gfm/mean.temp_vs_log_cases-2.png" width="40%" /><img src="README_files/figure-gfm/mean.temp_vs_log_cases-3.png" width="40%" /><img src="README_files/figure-gfm/mean.temp_vs_log_cases-4.png" width="40%" /><img src="README_files/figure-gfm/mean.temp_vs_log_cases-5.png" width="40%" />
+<img src="README_files/figure-gfm/mean.temp_vs_log_cases-1.png" width="40%" /><img src="README_files/figure-gfm/mean.temp_vs_log_cases-2.png" width="40%" /><img src="README_files/figure-gfm/mean.temp_vs_log_cases-3.png" width="40%" /><img src="README_files/figure-gfm/mean.temp_vs_log_cases-4.png" width="40%" />
 
-Some possible correlation, maybe stronger at lag 2, lag 7 and lag
-10.Possible spline effect.
+Some possible correlation, maybe stronger at lag 2, lag 6 and lag
+14.Possible spline effect.
 
 **Minimum temperature**
 
-<img src="README_files/figure-gfm/min.temp_vs_log_cases-1.png" width="40%" /><img src="README_files/figure-gfm/min.temp_vs_log_cases-2.png" width="40%" /><img src="README_files/figure-gfm/min.temp_vs_log_cases-3.png" width="40%" /><img src="README_files/figure-gfm/min.temp_vs_log_cases-4.png" width="40%" /><img src="README_files/figure-gfm/min.temp_vs_log_cases-5.png" width="40%" />
+<img src="README_files/figure-gfm/min.temp_vs_log_cases-1.png" width="40%" /><img src="README_files/figure-gfm/min.temp_vs_log_cases-2.png" width="40%" /><img src="README_files/figure-gfm/min.temp_vs_log_cases-3.png" width="40%" /><img src="README_files/figure-gfm/min.temp_vs_log_cases-4.png" width="40%" />
 
 Very weak correlation, if any at all, but some possible spline effect
 after approx min.temp = 12. This is particularly true in no lag, lag 2,
-lag 7 and lag 10.
+lag 6 and lag 14.
 
 **Maximum temperature**
 
-<img src="README_files/figure-gfm/max.temp_vs_log_cases-1.png" width="40%" /><img src="README_files/figure-gfm/max.temp_vs_log_cases-2.png" width="40%" /><img src="README_files/figure-gfm/max.temp_vs_log_cases-3.png" width="40%" /><img src="README_files/figure-gfm/max.temp_vs_log_cases-4.png" width="40%" /><img src="README_files/figure-gfm/max.temp_vs_log_cases-5.png" width="40%" />
+<img src="README_files/figure-gfm/max.temp_vs_log_cases-1.png" width="40%" /><img src="README_files/figure-gfm/max.temp_vs_log_cases-2.png" width="40%" /><img src="README_files/figure-gfm/max.temp_vs_log_cases-3.png" width="40%" /><img src="README_files/figure-gfm/max.temp_vs_log_cases-4.png" width="40%" />
 
 Some correlation. Plots show an interesting pocket where no data is
 found.
+
+## Linear regression models
+
+To compare the effects of the different environmental variables, I used
+a linear regression model to estimate the effects. In this model, I
+accounted for the effects of other variables, which included:
+
+-   Temporal pattern of covid incidence
+-   Lockdown periods
+-   2nd and 3rd vaccination numbers
+
+I started by including each environmental variable at a time. I compared
+the p-value for each coefficient and the AIC value for each model.
+
+| env.var          | p.value | signif |      aic |
+|:-----------------|--------:|:-------|---------:|
+| rain             |   0.222 | \-     | 1849.329 |
+| rain.lag.2       |   0.217 | \-     | 1849.295 |
+| rain.lag.6       |   0.105 | \-     | 1848.172 |
+| rain.lag.14      |   0.232 | \-     | 1849.391 |
+| mean.temp        |   0.000 | \*\*\* | 1835.321 |
+| mean.temp.lag.2  |   0.000 | \*\*\* | 1831.617 |
+| mean.temp.lag.6  |   0.000 | \*\*\* | 1825.896 |
+| mean.temp.lag.14 |   0.000 | \*\*\* | 1834.331 |
+| min.temp         |   0.005 | \*\*   | 1843.020 |
+| min.temp.lag.2   |   0.001 | \*\*   | 1840.391 |
+| min.temp.lag.6   |   0.000 | \*\*\* | 1837.825 |
+| min.temp.lag.14  |   0.012 | \*     | 1844.440 |
+| max.temp         |   0.000 | \*\*\* | 1829.615 |
+| max.temp.lag.2   |   0.000 | \*\*\* | 1825.803 |
+| max.temp.lag.6   |   0.000 | \*\*\* | 1817.637 |
+| max.temp.lag.14  |   0.000 | \*\*\* | 1825.876 |
