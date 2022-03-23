@@ -420,7 +420,89 @@ In this model, I accounted for the effects of other variables, which included:
 - Lockdown periods
 - 2nd and 3rd vaccination numbers
 
-I started by including each environmental variable at a time. I compared the p-value for each coefficient and the AIC value for each model. 
+To see how accounting for the effects of these variables, I used them to build a 'base model'. I then extracted the residuals from this 'base model' and plotted them against each environmental variable that I have. 
+
+```{r residuals_plots, echo=FALSE}
+
+covid.complete <- covid[complete.cases(covid),]
+
+lm.fit0 <- lm(log(incidence) ~ sin(2*pi*t/7) + cos(2*pi*t/7)+
+                lockdown + vacc.2nd + vacc.3rd, 
+              data = covid.complete)
+
+covid.complete$lm.resid <- lm.fit0$residuals
+
+vars.plot <- c("rain", "mean.temp", "min.temp", "max.temp")
+
+plot.resid <- list()
+
+for (i in 1:length(vars.plot)) {
+  
+  plot.resid[[vars.plot[i]]][["no.lag"]] <- 
+    ggplot(covid.complete, aes(y = lm.resid))+
+    geom_point(aes_string(x = vars.plot[i]))+
+    geom_smooth(method = lm, aes_string(x = vars.plot[i]))+
+    geom_smooth(col = "red",se = FALSE,
+                linetype = "dashed", size = 0.5,
+                aes_string(x = vars.plot[i]))
+  
+  lags <- c(2, 6, 14)
+  
+  for (j in 1:length(lags)) {
+    
+    plot.resid[[vars.plot[i]]][[paste0("lag.", lags[j])]] <-
+      ggplot(covid.complete, aes(y = lm.resid))+
+      geom_point(aes_string(x = paste0(vars.plot[i], ".lag.", lags[j])))+
+      geom_smooth(method = lm,
+                  aes_string(x = paste0(vars.plot[i], ".lag.", lags[j])))+
+      geom_smooth(col = "red",se = FALSE,
+                  linetype = "dashed", size = 0.5,
+                  aes_string(x = paste0(vars.plot[i], ".lag.", lags[j])))
+    
+  }
+  
+  
+}
+
+```
+
+**Rain**
+
+```{r rain_residuals, echo=FALSE, message=FALSE}
+
+plot.resid$rain
+
+```
+
+**Mean temperature**
+
+```{r mean.temp_residuals, echo=FALSE, message=FALSE}
+
+plot.resid$mean.temp
+
+```
+
+
+**Maximum temperature**
+
+```{r max.temp_residuals, echo=FALSE, message=FALSE}
+
+plot.resid$max.temp
+
+```
+
+**Minimum temperature**
+
+```{r min.temp_residuals, echo=FALSE, message=FALSE}
+
+plot.resid$min.temp
+
+```
+
+### Compare models
+
+I decided to compare the models which used each environmental variable one at a time.
+I compared the coefficient, the p-value for each coefficient and the AIC value for each model. 
 
 ```{r compare_models_1, echo=FALSE}
 
@@ -433,6 +515,7 @@ env.vars <- c("rain", "rain.lag.2", "rain.lag.6", "rain.lag.14",
 
 compare.models <- data.frame(
   env.var = env.vars,
+  coef = rep(NA, length(env.vars)),
   p.value = rep(NA, length(env.vars)),
   signif = rep(NA, length(env.vars)),
   aic = rep(NA, length(env.vars)))
@@ -464,6 +547,11 @@ for (i in 1:length(env.vars)) {
   }
   
   compare.models$p.value[i] <- round(compare.models$p.value[i], digits = 3)  
+  
+  compare.models$coef[i] <- exp(summary(lm.fit1)$coefficients[7,1])
+  
+  compare.models$coef[i] <- round(compare.models$coef[i], digits = 3)
+  
   
 }
 

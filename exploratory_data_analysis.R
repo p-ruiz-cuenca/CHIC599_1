@@ -198,6 +198,16 @@ knitr::kable(compare.models, format = 'html')
 compare.models
 
 
+## Model stage 2 -----
+
+lm.fit2 <- lm(log(incidence) ~ sin(2*pi*t/7) + cos(2*pi*t/7)+
+                lockdown + vacc.2nd + vacc.3rd +
+                max.temp.lag.6 + min.temp.lag.6 + mean.temp.lag.6,
+              data = covid.complete)
+
+summary(lm.fit2)
+
+
 
 ###############################################################################
 

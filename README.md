@@ -330,24 +330,115 @@ accounted for the effects of other variables, which included:
 -   Lockdown periods
 -   2nd and 3rd vaccination numbers
 
-I started by including each environmental variable at a time. I compared
-the p-value for each coefficient and the AIC value for each model.
+To see how accounting for the effects of these variables, I used them to
+build a ‘base model’. I then extracted the residuals from this ‘base
+model’ and plotted them against each environmental variable that I have.
 
-| env.var          | p.value | signif |      aic |
-|:-----------------|--------:|:-------|---------:|
-| rain             |   0.222 | \-     | 1849.329 |
-| rain.lag.2       |   0.217 | \-     | 1849.295 |
-| rain.lag.6       |   0.105 | \-     | 1848.172 |
-| rain.lag.14      |   0.232 | \-     | 1849.391 |
-| mean.temp        |   0.000 | \*\*\* | 1835.321 |
-| mean.temp.lag.2  |   0.000 | \*\*\* | 1831.617 |
-| mean.temp.lag.6  |   0.000 | \*\*\* | 1825.896 |
-| mean.temp.lag.14 |   0.000 | \*\*\* | 1834.331 |
-| min.temp         |   0.005 | \*\*   | 1843.020 |
-| min.temp.lag.2   |   0.001 | \*\*   | 1840.391 |
-| min.temp.lag.6   |   0.000 | \*\*\* | 1837.825 |
-| min.temp.lag.14  |   0.012 | \*     | 1844.440 |
-| max.temp         |   0.000 | \*\*\* | 1829.615 |
-| max.temp.lag.2   |   0.000 | \*\*\* | 1825.803 |
-| max.temp.lag.6   |   0.000 | \*\*\* | 1817.637 |
-| max.temp.lag.14  |   0.000 | \*\*\* | 1825.876 |
+**Rain**
+
+    ## $no.lag
+
+![](README_files/figure-gfm/rain_residuals-1.png)<!-- -->
+
+    ## 
+    ## $lag.2
+
+![](README_files/figure-gfm/rain_residuals-2.png)<!-- -->
+
+    ## 
+    ## $lag.6
+
+![](README_files/figure-gfm/rain_residuals-3.png)<!-- -->
+
+    ## 
+    ## $lag.14
+
+![](README_files/figure-gfm/rain_residuals-4.png)<!-- -->
+
+**Mean temperature**
+
+    ## $no.lag
+
+![](README_files/figure-gfm/mean.temp_residuals-1.png)<!-- -->
+
+    ## 
+    ## $lag.2
+
+![](README_files/figure-gfm/mean.temp_residuals-2.png)<!-- -->
+
+    ## 
+    ## $lag.6
+
+![](README_files/figure-gfm/mean.temp_residuals-3.png)<!-- -->
+
+    ## 
+    ## $lag.14
+
+![](README_files/figure-gfm/mean.temp_residuals-4.png)<!-- -->
+
+**Maximum temperature**
+
+    ## $no.lag
+
+![](README_files/figure-gfm/max.temp_residuals-1.png)<!-- -->
+
+    ## 
+    ## $lag.2
+
+![](README_files/figure-gfm/max.temp_residuals-2.png)<!-- -->
+
+    ## 
+    ## $lag.6
+
+![](README_files/figure-gfm/max.temp_residuals-3.png)<!-- -->
+
+    ## 
+    ## $lag.14
+
+![](README_files/figure-gfm/max.temp_residuals-4.png)<!-- -->
+
+**Minimum temperature**
+
+    ## $no.lag
+
+![](README_files/figure-gfm/min.temp_residuals-1.png)<!-- -->
+
+    ## 
+    ## $lag.2
+
+![](README_files/figure-gfm/min.temp_residuals-2.png)<!-- -->
+
+    ## 
+    ## $lag.6
+
+![](README_files/figure-gfm/min.temp_residuals-3.png)<!-- -->
+
+    ## 
+    ## $lag.14
+
+![](README_files/figure-gfm/min.temp_residuals-4.png)<!-- -->
+
+### Compare models
+
+I decided to compare the models which used each environmental variable
+one at a time. I compared the coefficient, the p-value for each
+coefficient and the AIC value for each model.
+
+| env.var          |  coef | p.value | signif |      aic |
+|:-----------------|------:|--------:|:-------|---------:|
+| rain             | 0.988 |   0.222 | \-     | 1849.329 |
+| rain.lag.2       | 0.988 |   0.217 | \-     | 1849.295 |
+| rain.lag.6       | 0.984 |   0.105 | \-     | 1848.172 |
+| rain.lag.14      | 0.988 |   0.232 | \-     | 1849.391 |
+| mean.temp        | 0.958 |   0.000 | \*\*\* | 1835.321 |
+| mean.temp.lag.2  | 0.954 |   0.000 | \*\*\* | 1831.617 |
+| mean.temp.lag.6  | 0.949 |   0.000 | \*\*\* | 1825.896 |
+| mean.temp.lag.14 | 0.957 |   0.000 | \*\*\* | 1834.331 |
+| min.temp         | 0.970 |   0.005 | \*\*   | 1843.020 |
+| min.temp.lag.2   | 0.965 |   0.001 | \*\*   | 1840.391 |
+| min.temp.lag.6   | 0.961 |   0.000 | \*\*\* | 1837.825 |
+| min.temp.lag.14  | 0.972 |   0.012 | \*     | 1844.440 |
+| max.temp         | 0.956 |   0.000 | \*\*\* | 1829.615 |
+| max.temp.lag.2   | 0.953 |   0.000 | \*\*\* | 1825.803 |
+| max.temp.lag.6   | 0.948 |   0.000 | \*\*\* | 1817.637 |
+| max.temp.lag.14  | 0.953 |   0.000 | \*\*\* | 1825.876 |
