@@ -58,7 +58,7 @@ for (i in 1:length(vars.plot)) {
   
   plot.list[[vars.plot[i]]][["no.lag"]] <- 
     ggplot(covid, aes(y = log(incidence)))+
-    geom_point(aes_string(x = vars.plot[i]))+
+    geom_point(aes_string(x = vars.plot[i], col = "lockdown"))+
     geom_smooth(method = lm, aes_string(x = vars.plot[i]))+
     geom_smooth(col = "red",se = FALSE,
                 linetype = "dashed", size = 0.5,
@@ -70,7 +70,8 @@ for (i in 1:length(vars.plot)) {
     
     plot.list[[vars.plot[i]]][[paste0("lag.", lags[j])]] <-
       ggplot(covid, aes(y = log(incidence)))+
-      geom_point(aes_string(x = paste0(vars.plot[i], ".lag.", lags[j])))+
+      geom_point(aes_string(x = paste0(vars.plot[i], ".lag.", lags[j]),
+                            col = "lockdown"))+
       geom_smooth(method = lm,
                   aes_string(x = paste0(vars.plot[i], ".lag.", lags[j])))+
       geom_smooth(col = "red",se = FALSE,
@@ -90,6 +91,57 @@ plot.list$min.temp
 
 plot.list$max.temp
 
+# 2.b) compare variables against RESIDUALS of basic model ====
+
+covid.complete <- covid[complete.cases(covid),]
+
+lm.fit0 <- lm(log(incidence) ~ sin(2*pi*t/7) + cos(2*pi*t/7)+
+                lockdown + vacc.2nd + vacc.3rd, 
+              data = covid.complete)
+
+covid.complete$lm.resid <- lm.fit0$residuals
+
+vars.plot <- c("rain", "mean.temp", "min.temp", "max.temp")
+
+plot.resid <- list()
+
+for (i in 1:length(vars.plot)) {
+  
+  plot.resid[[vars.plot[i]]][["no.lag"]] <- 
+    ggplot(covid.complete, aes(y = lm.resid))+
+    geom_point(aes_string(x = vars.plot[i]))+
+    geom_smooth(method = lm, aes_string(x = vars.plot[i]))+
+    geom_smooth(col = "red",se = FALSE,
+                linetype = "dashed", size = 0.5,
+                aes_string(x = vars.plot[i]))
+  
+  lags <- c(2, 6, 14)
+  
+  for (j in 1:length(lags)) {
+    
+    plot.resid[[vars.plot[i]]][[paste0("lag.", lags[j])]] <-
+      ggplot(covid.complete, aes(y = lm.resid))+
+      geom_point(aes_string(x = paste0(vars.plot[i], ".lag.", lags[j])))+
+      geom_smooth(method = lm,
+                  aes_string(x = paste0(vars.plot[i], ".lag.", lags[j])))+
+      geom_smooth(col = "red",se = FALSE,
+                  linetype = "dashed", size = 0.5,
+                  aes_string(x = paste0(vars.plot[i], ".lag.", lags[j])))
+    
+  }
+  
+  
+}
+
+plot.resid$rain
+
+plot.resid$mean.temp
+
+plot.resid$min.temp
+
+plot.resid$max.temp
+
+
 # 3. Build model ====
 
 covid.complete <- covid[complete.cases(covid),]
@@ -101,6 +153,7 @@ env.vars <- c("rain", "rain.lag.2", "rain.lag.6", "rain.lag.14",
 
 compare.models <- data.frame(
   env.var = env.vars,
+  coef = rep(NA, length(env.vars)),
   p.value = rep(NA, length(env.vars)),
   signif = rep(NA, length(env.vars)),
   aic = rep(NA, length(env.vars)))
@@ -133,11 +186,17 @@ for (i in 1:length(env.vars)) {
   
   compare.models$p.value[i] <- round(compare.models$p.value[i], digits = 3)  
   
+  compare.models$coef[i] <- exp(summary(lm.fit1)$coefficients[7,1])
+  
+  compare.models$coef[i] <- round(compare.models$coef[i], digits = 3)
+  
+  
 }
 
 knitr::kable(compare.models, format = 'html')
 
 compare.models
+
 
 
 ###############################################################################
@@ -158,11 +217,9 @@ ggplot(d,aes(x,y)) + geom_point() +
 covid.comp <- covid[complete.cases(covid),]
 
 lm.fit1 <- lm(log(cases) ~ t + sin(2*pi*t/7) + cos(2*pi*t/7)+
-                lockdown + rain.lag.7 + max.temp.lag.7 + min.temp.lag.7+
-                vacc.2nd + vacc.3rd,
+                lockdown,
               data = covid.comp)
-summary(lm.fit1)
-
+summary(lm.fit1)$coefficients[5,1]
 covid.comp$pred.cases <- predict(lm.fit1)
 
 
