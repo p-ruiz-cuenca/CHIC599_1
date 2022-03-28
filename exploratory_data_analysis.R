@@ -67,20 +67,86 @@ ggplot(covid, aes(x = date, y = log(reinf+1)))+
 # Vaccinations 
 
 ggplot(covid, aes(x = date))+
-  geom_line(aes(y = vacc.2nd), col = "red")+
-  geom_line(aes(y = vacc.3rd), col = "blue")
+  geom_line(aes(y = vacc.2nd), col = "purple")+
+  geom_line(aes(y = vacc.3rd), col = "orange")
+
+p2 <- ggplot(covid, aes(x = date))+
+  geom_line(aes(y = log((vacc.2nd+1)/pop), col = "2nd Vaccination"))+
+  geom_line(aes(y = log((vacc.3rd+1)/pop), col = "3rd Vaccination"))+
+  geom_line(aes(y = log(incidence), col = "COVID-19 incidence"))+
+  labs(x = "Date", y = "log(Incidence)", col = "Legend")+
+  scale_x_date(date_labels = "%b-%y",
+               breaks = ymd(c("2020-07-01", "2020-09-01", "2020-11-01",
+                              "2021-01-01", "2021-03-01", "2021-05-01",
+                              "2021-07-01", "2021-09-01", "2021-11-01",
+                              "2022-01-01", "2022-03-01")),
+               date_minor_breaks = "1 months", 
+               limits = c(min(covid$date), max(covid$date)))+
+  scale_color_manual(values = c("COVID-19 incidence" = "black",
+                                "2nd Vaccination" = "purple",
+                                "3rd Vaccination" = "orange"))+
+  my_theme()+
+  guides(color = guide_legend(byrow = TRUE))+
+  theme(axis.text.x=element_text(angle=20, hjust=1, size = 8),
+        legend.title = element_text(size = 8),
+        legend.text = element_text(size=8),
+        legend.spacing.y = unit(0.5, "mm"))
+  
+ggsave("output/fig_2.png", p2, device = "png", units = "cm",
+       height = 7.48, width = 15.89)
+
+covid$date[which(covid$vacc.2nd != 0)]
+
+min(covid$date[which(covid$vacc.2nd != 0)])
+
+covid$date[which(covid$vacc.2nd==max(covid$vacc.2nd))]
+
+covid$date[which(covid$vacc.2nd==max(covid$vacc.2nd[covid$t<220]))]
+
+min(covid$date[which(covid$vacc.3rd>12500)])
 
 ## b. Rain -----
 
 ggplot(covid, aes(x = date, y = rain))+
   geom_line()
 
+p3 <- ggplot(covid, aes(x = date, y = rain))+
+  geom_line()+
+  labs(x = "Date", y = "Daily rainfall (mm)")+
+  scale_x_date(date_labels = "%b-%y",
+               breaks = ymd(c("2020-07-01", "2020-09-01", "2020-11-01",
+                              "2021-01-01", "2021-03-01", "2021-05-01",
+                              "2021-07-01", "2021-09-01", "2021-11-01",
+                              "2022-01-01", "2022-03-01")),
+               date_minor_breaks = "1 months", 
+               limits = c(min(covid$date), max(covid$date)))+
+  my_theme()+
+  theme(axis.text.x=element_text(angle=20, hjust=1, size = 8))
+
+ggsave("output/fig_3.png", p3, device = "png", units = "cm",
+       height = 7.48, width = 15.89)
+
+
+
 ## c. Temperature ----
 
-ggplot(covid, aes(x = date))+
-  geom_ribbon(aes(ymax = max.temp, ymin = min.temp), fill = "red",
+p4 <- ggplot(covid, aes(x = date))+
+  geom_ribbon(aes(ymax = max.temp, ymin = min.temp), fill = "blue",
               alpha = 0.3)+
-  geom_line(aes(y = mean.temp))
+  geom_line(aes(y = mean.temp))+
+  labs(x = "Date", y = "Daily Temperature (°C)")+
+  scale_x_date(date_labels = "%b-%y",
+               breaks = ymd(c("2020-07-01", "2020-09-01", "2020-11-01",
+                              "2021-01-01", "2021-03-01", "2021-05-01",
+                              "2021-07-01", "2021-09-01", "2021-11-01",
+                              "2022-01-01", "2022-03-01")),
+               date_minor_breaks = "1 months", 
+               limits = c(min(covid$date), max(covid$date)))+
+  my_theme()+
+  theme(axis.text.x=element_text(angle=20, hjust=1, size = 8))
+
+ggsave("output/fig_4.png", p4, device = "png", units = "cm",
+       height = 7.48, width = 15.89)
 
 # 2. Compare variables against log(incidence) ====
 
