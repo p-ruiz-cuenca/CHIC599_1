@@ -210,11 +210,11 @@ for (i in 1:length(vars.plot)) {
   
   plot.resid[[vars.plot[i]]][["no.lag"]] <- 
     ggplot(covid.complete, aes(y = lm.resid))+
-    geom_point(aes_string(x = vars.plot[i]))+
-    geom_smooth(method = lm, aes_string(x = vars.plot[i]))+
-    geom_smooth(col = "red",se = FALSE,
-                linetype = "dashed", size = 0.5,
-                aes_string(x = vars.plot[i]))
+    geom_point(aes_string(x = vars.plot[i]),
+               alpha = 0.6)+
+    geom_smooth(method = lm, aes_string(x = vars.plot[i]),
+                fill = "#8C89FB")
+    
   
   lags <- c(2, 6, 14)
   
@@ -222,12 +222,12 @@ for (i in 1:length(vars.plot)) {
     
     plot.resid[[vars.plot[i]]][[paste0("lag.", lags[j])]] <-
       ggplot(covid.complete, aes(y = lm.resid))+
-      geom_point(aes_string(x = paste0(vars.plot[i], ".lag.", lags[j])))+
+      geom_point(aes_string(x = paste0(vars.plot[i], ".lag.", lags[j])),
+                 alpha = 0.6)+
       geom_smooth(method = lm,
-                  aes_string(x = paste0(vars.plot[i], ".lag.", lags[j])))+
-      geom_smooth(col = "red",se = FALSE,
-                  linetype = "dashed", size = 0.5,
-                  aes_string(x = paste0(vars.plot[i], ".lag.", lags[j])))
+                  aes_string(x = paste0(vars.plot[i], ".lag.", lags[j])),
+                  fill = "#8C89FB")
+    
     
   }
   
@@ -236,16 +236,16 @@ for (i in 1:length(vars.plot)) {
 
 plot.resid$rain
 
-A <- plot.resid$rain$no.lag + labs(x = "Daily estimated rainfall, mm",
+A <- plot.resid$rain$no.lag + labs(x = "Rainfall (mm), no lag",
                                    y = "Residual") +
   my_theme()
-B <- plot.resid$rain$lag.2+ labs(x = "Daily estimated rainfall, mm",
+B <- plot.resid$rain$lag.2+ labs(x = "Rainfall (mm), 2 day lag",
                                  y = "Residual") +
   my_theme()
-C <- plot.resid$rain$lag.6+ labs(x = "Daily estimated rainfall, mm",
+C <- plot.resid$rain$lag.6+ labs(x = "Rainfall (mm), 6 day lag",
                                  y = "Residual") +
   my_theme()
-D <- plot.resid$rain$lag.14+ labs(x = "Daily estimated rainfall, mm",
+D <- plot.resid$rain$lag.14+ labs(x = "Rainfall (mm), 14 day lag",
                                   y = "Residual") +
   my_theme()
 
@@ -253,17 +253,92 @@ p5 <- ggpubr::ggarrange(A, B, C, D, labels = "AUTO",
                   font.label = list(family = "serif"),
                   hjust = -0.3)
 
+p5
+
 ggsave("output/fig_5.png", p5, device = "png", units = "cm",
        height = 12, width = 15.88)
 
-ggsave("output/fig_4.png", p4, device = "png", units = "cm",
-       height = 7.48, width = 15.89)
+
 plot.resid$mean.temp
+
+A <- plot.resid$mean.temp$no.lag + labs(x = "Mean Temp (°C), no lag",
+                                        y = "Residual") +
+  my_theme()
+
+B <- plot.resid$mean.temp$lag.2 + labs(x = "Mean Temp (°C), 2-day lag",
+                                       y = "Residual") +
+  my_theme()
+
+C <- plot.resid$mean.temp$lag.6 + labs(x = "Mean Temp (°C), 6-day lag",
+                                       y = "Residual") +
+  my_theme()
+
+D <- plot.resid$mean.temp$lag.14 + labs(x = "Mean Temp (°C), 14-day lag",
+                                        y = "Residual") +
+  my_theme()
+
+p6 <- ggpubr::ggarrange(A, B, C, D, labels = "AUTO", 
+                        font.label = list(family = "serif"),
+                        hjust = -0.3)
+
+p6
+
+ggsave("output/fig_6.png", p6, device = "png", units = "cm",
+       height = 12, width = 15.88)
 
 plot.resid$min.temp
 
+A <- plot.resid$min.temp$no.lag + labs(x = "Min Temp (°C), no lag",
+                                        y = "Residual") +
+  my_theme()
+
+B <- plot.resid$min.temp$lag.2 + labs(x = "Min Temp (°C), 2-day lag",
+                                       y = "Residual") +
+  my_theme()
+
+C <- plot.resid$min.temp$lag.6 + labs(x = "Min Temp (°C), 6-day lag",
+                                       y = "Residual") +
+  my_theme()
+
+D <- plot.resid$min.temp$lag.14 + labs(x = "Min Temp (°C), 14-day lag",
+                                        y = "Residual") +
+  my_theme()
+
+p7 <- ggpubr::ggarrange(A, B, C, D, labels = "AUTO", 
+                        font.label = list(family = "serif"),
+                        hjust = -0.3)
+
+p7
+
+ggsave("output/fig_7.png", p7, device = "png", units = "cm",
+       height = 12, width = 15.88)
+
 plot.resid$max.temp
 
+A <- plot.resid$max.temp$no.lag + labs(x = "Max Temp (°C), no lag",
+                                       y = "Residual") +
+  my_theme()
+
+B <- plot.resid$max.temp$lag.2 + labs(x = "Max Temp (°C), 2-day lag",
+                                      y = "Residual") +
+  my_theme()
+
+C <- plot.resid$max.temp$lag.6 + labs(x = "Max Temp (°C), 6-day lag",
+                                      y = "Residual") +
+  my_theme()
+
+D <- plot.resid$max.temp$lag.14 + labs(x = "Max Temp (°C), 14-day lag",
+                                       y = "Residual") +
+  my_theme()
+
+p8 <- ggpubr::ggarrange(A, B, C, D, labels = "AUTO", 
+                        font.label = list(family = "serif"),
+                        hjust = -0.3)
+
+p8
+
+ggsave("output/fig_8.png", p8, device = "png", units = "cm",
+       height = 12, width = 15.88)
 
 # 3. Build model ====
 
