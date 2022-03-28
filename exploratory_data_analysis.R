@@ -113,6 +113,7 @@ ggplot(covid, aes(x = date, y = rain))+
 
 p3 <- ggplot(covid, aes(x = date, y = rain))+
   geom_line()+
+  
   labs(x = "Date", y = "Daily rainfall (mm)")+
   scale_x_date(date_labels = "%b-%y",
                breaks = ymd(c("2020-07-01", "2020-09-01", "2020-11-01",
@@ -123,6 +124,8 @@ p3 <- ggplot(covid, aes(x = date, y = rain))+
                limits = c(min(covid$date), max(covid$date)))+
   my_theme()+
   theme(axis.text.x=element_text(angle=20, hjust=1, size = 8))
+
+p3
 
 ggsave("output/fig_3.png", p3, device = "png", units = "cm",
        height = 7.48, width = 15.89)
