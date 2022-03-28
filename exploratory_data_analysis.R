@@ -7,7 +7,7 @@ covid <- read.csv("data/covid_data.csv")
 
 covid$date <- ymd(covid$date)
 
-# add labels to variables 
+## add labels to variables ----
 
 library(expss)
 
@@ -18,14 +18,48 @@ covid <- apply_labels(covid,
                       reinf = "New reinfections by specimen date")
 
 
+
+## set my_theme() -----
+
+my_theme <- function(){
+  
+  font <- "serif"
+  
+  theme_light() %+replace%
+    
+    theme(
+      text = element_text(family = font)
+    )   
+}
+
 # 1. Exploratory analysis of variables over time ====
 
 ## a. COVID cases ----
 
 covid$incidence <- covid$cases/covid$pop
 
-ggplot(covid, aes(x = date, y = log(incidence)))+
-  geom_line()
+p1 <- ggplot(covid, aes(x = date, y = log(incidence)))+
+  geom_line() +
+  labs(x = "Date", y = "log(Incidence)")+
+  annotate("rect", xmin = ymd("2020-11-04"), xmax = ymd("2020-12-02"),
+           ymin = -12, ymax = max(log(covid$incidence))+0.2,
+           fill = "red", alpha = 0.1)+
+  annotate("rect", xmin = ymd("2020-12-25"), xmax = ymd("2021-03-30"),
+           ymin = -12, ymax = max(log(covid$incidence))+0.2,
+           fill = "red", alpha = 0.1)+
+  scale_y_continuous(expand = c(0,0))+
+  scale_x_date(date_labels = "%b-%y",
+               breaks = ymd(c("2020-07-01", "2020-09-01", "2020-11-01",
+                                   "2021-01-01", "2021-03-01", "2021-05-01",
+                                   "2021-07-01", "2021-09-01", "2021-11-01",
+                                   "2022-01-01", "2022-03-01")),
+               date_minor_breaks = "1 months", 
+               limits = c(min(covid$date), max(covid$date)))+
+  my_theme()+
+  theme(axis.text.x=element_text(angle=20, hjust=1, size = 8))
+
+ggsave("output/fig_1.png", p1, device = "png", units = "cm",
+       height = 7.48, width = 15.89)
 
 ggplot(covid, aes(x = date, y = log(reinf+1)))+
   geom_line()
