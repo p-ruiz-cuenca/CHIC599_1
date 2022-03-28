@@ -2,6 +2,7 @@
 
 library(ggplot2)
 library(lubridate)
+library(ggpubr)
 
 covid <- read.csv("data/covid_data.csv")
 
@@ -235,6 +236,28 @@ for (i in 1:length(vars.plot)) {
 
 plot.resid$rain
 
+A <- plot.resid$rain$no.lag + labs(x = "Daily estimated rainfall, mm",
+                                   y = "Residual") +
+  my_theme()
+B <- plot.resid$rain$lag.2+ labs(x = "Daily estimated rainfall, mm",
+                                 y = "Residual") +
+  my_theme()
+C <- plot.resid$rain$lag.6+ labs(x = "Daily estimated rainfall, mm",
+                                 y = "Residual") +
+  my_theme()
+D <- plot.resid$rain$lag.14+ labs(x = "Daily estimated rainfall, mm",
+                                  y = "Residual") +
+  my_theme()
+
+p5 <- ggpubr::ggarrange(A, B, C, D, labels = "AUTO", 
+                  font.label = list(family = "serif"),
+                  hjust = -0.3)
+
+ggsave("output/fig_5.png", p5, device = "png", units = "cm",
+       height = 12, width = 15.88)
+
+ggsave("output/fig_4.png", p4, device = "png", units = "cm",
+       height = 7.48, width = 15.89)
 plot.resid$mean.temp
 
 plot.resid$min.temp
