@@ -240,16 +240,16 @@ for (i in 1:length(vars.plot)) {
 plot.resid$rain
 
 A <- plot.resid$rain$no.lag + labs(x = "Rainfall (mm), no lag",
-                                   y = "Residual") +
+                                   y = "Residuals") +
   my_theme()
 B <- plot.resid$rain$lag.2+ labs(x = "Rainfall (mm), 2 day lag",
-                                 y = "Residual") +
+                                 y = "Residuals") +
   my_theme()
 C <- plot.resid$rain$lag.6+ labs(x = "Rainfall (mm), 6 day lag",
-                                 y = "Residual") +
+                                 y = "Residuals") +
   my_theme()
 D <- plot.resid$rain$lag.14+ labs(x = "Rainfall (mm), 14 day lag",
-                                  y = "Residual") +
+                                  y = "Residuals") +
   my_theme()
 
 p5 <- ggpubr::ggarrange(A, B, C, D, labels = "AUTO", 
@@ -265,19 +265,19 @@ ggsave("output/fig_5.png", p5, device = "png", units = "cm",
 plot.resid$mean.temp
 
 A <- plot.resid$mean.temp$no.lag + labs(x = "Mean Temp (°C), no lag",
-                                        y = "Residual") +
+                                        y = "Residuals") +
   my_theme()
 
 B <- plot.resid$mean.temp$lag.2 + labs(x = "Mean Temp (°C), 2-day lag",
-                                       y = "Residual") +
+                                       y = "Residuals") +
   my_theme()
 
 C <- plot.resid$mean.temp$lag.6 + labs(x = "Mean Temp (°C), 6-day lag",
-                                       y = "Residual") +
+                                       y = "Residuals") +
   my_theme()
 
 D <- plot.resid$mean.temp$lag.14 + labs(x = "Mean Temp (°C), 14-day lag",
-                                        y = "Residual") +
+                                        y = "Residuals") +
   my_theme()
 
 p6 <- ggpubr::ggarrange(A, B, C, D, labels = "AUTO", 
@@ -292,19 +292,19 @@ ggsave("output/fig_6.png", p6, device = "png", units = "cm",
 plot.resid$min.temp
 
 A <- plot.resid$min.temp$no.lag + labs(x = "Min Temp (°C), no lag",
-                                        y = "Residual") +
+                                        y = "Residuals") +
   my_theme()
 
 B <- plot.resid$min.temp$lag.2 + labs(x = "Min Temp (°C), 2-day lag",
-                                       y = "Residual") +
+                                       y = "Residuals") +
   my_theme()
 
 C <- plot.resid$min.temp$lag.6 + labs(x = "Min Temp (°C), 6-day lag",
-                                       y = "Residual") +
+                                       y = "Residuals") +
   my_theme()
 
 D <- plot.resid$min.temp$lag.14 + labs(x = "Min Temp (°C), 14-day lag",
-                                        y = "Residual") +
+                                        y = "Residuals") +
   my_theme()
 
 p7 <- ggpubr::ggarrange(A, B, C, D, labels = "AUTO", 
@@ -319,19 +319,19 @@ ggsave("output/fig_7.png", p7, device = "png", units = "cm",
 plot.resid$max.temp
 
 A <- plot.resid$max.temp$no.lag + labs(x = "Max Temp (°C), no lag",
-                                       y = "Residual") +
+                                       y = "Residuals") +
   my_theme()
 
 B <- plot.resid$max.temp$lag.2 + labs(x = "Max Temp (°C), 2-day lag",
-                                      y = "Residual") +
+                                      y = "Residuals") +
   my_theme()
 
 C <- plot.resid$max.temp$lag.6 + labs(x = "Max Temp (°C), 6-day lag",
-                                      y = "Residual") +
+                                      y = "Residuals") +
   my_theme()
 
 D <- plot.resid$max.temp$lag.14 + labs(x = "Max Temp (°C), 14-day lag",
-                                       y = "Residual") +
+                                       y = "Residuals") +
   my_theme()
 
 p8 <- ggpubr::ggarrange(A, B, C, D, labels = "AUTO", 
