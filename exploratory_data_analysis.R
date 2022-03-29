@@ -355,6 +355,8 @@ env.vars <- c("rain", "rain.lag.2", "rain.lag.6", "rain.lag.14",
 compare.models <- data.frame(
   env.var = env.vars,
   coef = rep(NA, length(env.vars)),
+  lower = rep(NA, length(env.vars)),
+  upper = rep(NA, length(env.vars)),
   p.value = rep(NA, length(env.vars)),
   signif = rep(NA, length(env.vars)),
   aic = rep(NA, length(env.vars)))
@@ -391,6 +393,16 @@ for (i in 1:length(env.vars)) {
   
   compare.models$coef[i] <- round(compare.models$coef[i], digits = 3)
   
+  compare.models$lower[i] <- exp(summary(lm.fit1)$coefficients[7,1] - 
+                                   qnorm(0.975)*summary(lm.fit1)$coefficients[7,2])
+  
+  compare.models$lower[i] <- round(compare.models$lower[i], digits = 3)
+  
+  compare.models$upper[i] <- exp(summary(lm.fit1)$coefficients[7,1] + 
+                                   qnorm(0.975)*summary(lm.fit1)$coefficients[7,2])
+  
+  compare.models$upper[i] <- round(compare.models$upper[i], digits = 3)
+  
   
 }
 
@@ -398,6 +410,8 @@ knitr::kable(compare.models, format = 'html')
 
 compare.models
 
+write.csv(compare.models, file = "output/compare_models.csv",
+          row.names = FALSE)
 
 ## Model stage 2 -----
 
@@ -408,7 +422,44 @@ lm.fit2 <- lm(log(incidence) ~ sin(2*pi*t/7) + cos(2*pi*t/7)+
 
 summary(lm.fit2)
 
+# 4. Check residual temporal correlation =====
 
+source("auxiliary_function.R")
+
+lm.fit.final <- lm(log(incidence) ~ sin(2*pi*t/7) + cos(2*pi*t/7)+
+                     lockdown + vacc.2nd + vacc.3rd +
+                     max.temp.lag.6,
+                   data = covid.complete)
+
+vari.lm.final <- vari.time(time = covid.complete$t,
+                           data = residuals(lm.fit.final),
+                           uvec = seq(1, 90, by = 1))
+
+env.vari.1 <- vari.env(vari.lm.final,
+                       time = covid.complete$t,
+                       data = residuals(lm.fit.final),
+                       nsim = 10000)
+
+# Combine in data.frame for ease of plotting
+
+vari.covid <- data.frame(
+  u = vari.lm.final$u,
+  v = vari.lm.final$v,
+  v.lower = env.vari.1$v.lower,
+  v.upper = env.vari.1$v.upper
+)
+
+# plot 
+
+p9 <- ggplot(vari.covid, aes(x = u))+
+  geom_line(aes(y = v), col = "black")+
+  geom_line(aes(y = v.upper), col = "black", linetype = "dashed", size = 0.3)+
+  geom_line(aes(y = v.lower), col = "black", linetype = "dashed", size = 0.3)+
+  labs(x = "Time separation (days)", y = "Variogram")+
+  my_theme()
+
+ggsave("output/fig_9.png", p9, device = "png", units = "cm",
+       height = 7.48, width = 15.89)
 
 ###############################################################################
 
