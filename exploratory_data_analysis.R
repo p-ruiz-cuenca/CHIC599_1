@@ -461,6 +461,15 @@ p9 <- ggplot(vari.covid, aes(x = u))+
 ggsave("output/fig_9.png", p9, device = "png", units = "cm",
        height = 7.48, width = 15.89)
 
+
+# play around with data
+
+covid.complete$predict.cases <- predict(lm.fit.final)
+
+ggplot(covid.complete, aes(x = t))+
+  geom_line(aes(y = incidence), col = "black")+
+  geom_line(aes(y = exp(predict.cases)), col = "red")
+
 ###############################################################################
 
 splines::bs()
@@ -533,3 +542,21 @@ covid %>%
 
 ggplot(covid, aes(x = week.day, y = log(incidence)))+
   geom_line(aes(group = week.num), alpha = 0.2)
+
+
+ggplot(covid, aes(x = as.factor(lockdown), y = log(incidence)))+
+  geom_boxplot()
+
+ggplot(covid, aes(x = log(vacc.2nd), y = log(incidence)))+
+  geom_point()
+
+ggplot(covid, aes(x = vacc.3rd, y = incidence))+
+  geom_point()+
+  geom_smooth()
+
+ggplot(covid, aes(x = reinf, y = log(incidence)))+
+  geom_point()
+
+ggplot(covid, aes(x = deaths.28, y = log(incidence)))+
+  geom_point()
+
