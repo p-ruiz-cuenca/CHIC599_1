@@ -57,10 +57,15 @@ p1 <- ggplot(covid, aes(x = date, y = log(incidence)))+
                date_minor_breaks = "1 months", 
                limits = c(min(covid$date), max(covid$date)))+
   my_theme()+
-  theme(axis.text.x=element_text(angle=20, hjust=1, size = 8))
+  theme(text = element_text(size = 30))+
+  theme(axis.text.x=element_text(angle=20, hjust=1, size = 18))
+  
 
 ggsave("output/fig_1.png", p1, device = "png", units = "cm",
        height = 7.48, width = 15.89)
+
+ggsave("output/poster_1.png", p1, device = "png", units = "cm",
+       height = 17.18, width = 21.29)
 
 ggplot(covid, aes(x = date, y = log(reinf+1)))+
   geom_line()
@@ -328,7 +333,8 @@ B <- plot.resid$max.temp$lag.2 + labs(x = "Max Temp (°C), 2-day lag",
 
 C <- plot.resid$max.temp$lag.6 + labs(x = "Max Temp (°C), 6-day lag",
                                       y = "Residuals") +
-  my_theme()
+  my_theme()+
+  theme(text = element_text(size = 30))
 
 D <- plot.resid$max.temp$lag.14 + labs(x = "Max Temp (°C), 14-day lag",
                                        y = "Residuals") +
@@ -342,6 +348,9 @@ p8
 
 ggsave("output/fig_8.png", p8, device = "png", units = "cm",
        height = 12, width = 15.88)
+
+ggsave("output/poster_2.png", C, device = "png", units = "cm",
+       height = 17.18, width = 21.29)
 
 # 3. Build model ====
 
@@ -456,10 +465,14 @@ p9 <- ggplot(vari.covid, aes(x = u))+
   geom_line(aes(y = v.upper), col = "black", linetype = "dashed", size = 0.3)+
   geom_line(aes(y = v.lower), col = "black", linetype = "dashed", size = 0.3)+
   labs(x = "Time separation (days)", y = "Variogram")+
-  my_theme()
+  my_theme()+
+  theme(text = element_text(size = 30))
 
 ggsave("output/fig_9.png", p9, device = "png", units = "cm",
        height = 7.48, width = 15.89)
+
+ggsave("output/poster_3.png", p9, device = "png", units = "cm",
+       height = 17.18, width = 21.29)
 
 
 # play around with data
